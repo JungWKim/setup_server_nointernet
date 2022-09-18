@@ -7,15 +7,14 @@ gpu_presence=no
 docker_install=no
 nvidia_docker_install=no
 
-cd ${user_home}
 
 #----------- install basic packages
-yum localinstall -y centos7.9/basic/*
+yum localinstall -y centos7.9/basic/*.rpm
 
 #----------- mount disks
 if [ ${update} = yes ] || [ ${update} = y ] ; then
 
-	yum localinstall -y centos7.9/update/*
+	yum localinstall -y centos7.9/update/*.rpm
 
 fi
 
@@ -23,7 +22,7 @@ fi
 
 if [ ${gpu_presence} = yes ] || [ ${gpu_presence} = y ] ; then
 
-	yum localinstall -y centos7.9/gpu/*
+	yum localinstall -y centos7.9/gpu/*.rpm
 
 	touch /etc/modprobe.d/blacklist.conf
 	cat >> /etc/modprobe.d/blacklist.conf << EOF
@@ -54,7 +53,7 @@ fi
 #------------- install docker -------------
 if [ ${docker_install} = yes ] || [ ${docker_install} == y ]; then
 
-	yum localinstall -y centos7.9/docker/*
+	yum localinstall -y centos7.9/docker/*.rpm
 	systemctl start docker
 	systemctl enable docker
 	
@@ -68,7 +67,7 @@ fi
 #------------- install nvidia docker -------------
 if [ ${nvidia_docker_install} = yes ] || [ ${nvidia_docker_install} == y ]; then
 
-	yum localinstall -y centos7.9/nvidia-container-toolkit/*
+	yum localinstall -y centos7.9/nvidia-container-toolkit/*.rpm
 	systemctl restart docker
 	
 	echo -e "\n\n\n------------------------------------------ docker images -----------------------------------------------"
@@ -79,3 +78,4 @@ if [ ${nvidia_docker_install} = yes ] || [ ${nvidia_docker_install} == y ]; then
 	nvidia-container-toolkit
 
 fi
+
