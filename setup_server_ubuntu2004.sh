@@ -3,9 +3,9 @@
 user_home=/home/gpuadmin
 
 disk_presence=no
-gpu_presence=yes
-docker_install=yes
-nvidia_docker_install=yes
+gpu_presence=no
+docker_install=no
+nvidia_docker_install=no
 
 
 #----------- prevent package auto upgrade
