@@ -33,7 +33,7 @@ if [ ${gpu_presence} = yes ] || [ ${gpu_presence} = y ] ; then
 
 #----------- download nvidia driver / cuda / cudnn installation files
 
-	dpkg -i ubuntu2004/gpu/archives/*.deb
+	dpkg -i ./ubuntu2004/gpu/archives/*.deb
 
 	cat >> /etc/modprobe.d/blacklist.conf << EOF
 blacklist nouveau
@@ -59,7 +59,7 @@ fi
 #------------ install docker
 if [ ${docker_install} = yes ] || [ ${docker_install} = y ] ; then
 
-	dpkg -i ubuntu2004/docker/archives/*.deb
+	dpkg -i ./ubuntu2004/docker/archives/*.deb
 
 	echo -e "\n\n\n------------------------------------------ docker images -----------------------------------------------"
 	docker images
@@ -71,7 +71,7 @@ fi
 #------------- install nvidia docker
 if [ ${nvidia_docker_install} = yes ] || [ ${nvidia_docker_install} = y ] ; then
 
-	dpkg -i ubuntu2004/nvidia-container-toolkit/archives/*.deb
+	dpkg -i ./ubuntu2004/nvidia-container-toolkit/archives/*.deb
 	systemctl restart docker
 
 	echo -e "\n\n\n------------------------------------------ docker images -----------------------------------------------"
