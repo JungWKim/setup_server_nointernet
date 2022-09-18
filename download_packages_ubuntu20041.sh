@@ -1,16 +1,16 @@
 #!/bin/bash
 
-mkdir -p ubuntu2004
+mkdir -p ubuntu20041
 
-mkdir ubuntu2004/basic ubuntu2004/gpu ubuntu2004/docker ubuntu2004/nvidia-container-toolkit
+mkdir ubuntu20041/basic ubuntu20041/gpu ubuntu20041/docker ubuntu20041/nvidia-container-toolkit
 
 apt update
 
-apt reinstall -y net-tools xfsprogs --download-only -o Dir::Cache="./ubuntu2004/basic"
+apt reinstall -y net-tools xfsprogs --download-only -o Dir::Cache="./ubuntu20041/basic"
 
-apt reinstall -y build-essential linux-headers-generic dkms --download-only -o Dir::Cache="./ubuntu2004/gpu"
+apt reinstall -y build-essential linux-headers-generic dkms --download-only -o Dir::Cache="./ubuntu20041/gpu"
 
-apt reinstall -y ca-certificates curl gnupg lsb-release --download-only -o Dir::Cache="./ubuntu2004/docker"
+apt reinstall -y ca-certificates curl gnupg lsb-release --download-only -o Dir::Cache="./ubuntu20041/docker"
 
 apt install -y ca-certificates curl gnupg lsb-release
 
@@ -24,7 +24,7 @@ echo \
 
 apt update
 	
-apt reinstall -y docker-ce docker-ce-cli containerd.io docker-compose-plugin --download-only -o Dir::Cache="./ubuntu2004/docker"
+apt reinstall -y docker-ce docker-ce-cli containerd.io docker-compose-plugin --download-only -o Dir::Cache="./ubuntu20041/docker"
 
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 
@@ -34,4 +34,4 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 
 apt update
 
-apt reinstall -y nvidia-container-toolkit --download-only -o Dir::Cache="./ubuntu2004/nvidia-container-toolkit"
+apt reinstall -y nvidia-container-toolkit --download-only -o Dir::Cache="./ubuntu20041/nvidia-container-toolkit"

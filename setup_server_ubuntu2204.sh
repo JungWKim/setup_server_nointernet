@@ -7,12 +7,14 @@ gpu_presence=no
 docker_install=no
 nvidia_docker_install=no
 
+#----------- disable outdated librareis pop up
+sed -i "s/\#\$nrconf{restart} = 'i'/\$nrconf{restart} = 'a'/g" /etc/needrestart/needrestart.conf
 
 #----------- prevent package auto upgrade
 sed -i 's/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades
 
 #----------- install basic packages
-dpkg -i ./ubuntu2004/basic/archives/*.deb
+dpkg -i ./ubuntu2204/basic/archives/*.deb
 
 #----------- mount disks
 if [ ${disk_presence} = yes ] || [ ${disk_presence} = y ] ; then
@@ -33,7 +35,7 @@ if [ ${gpu_presence} = yes ] || [ ${gpu_presence} = y ] ; then
 
 #----------- download nvidia driver / cuda / cudnn installation files
 
-	dpkg -i ./ubuntu2004/gpu/archives/*.deb
+	dpkg -i ./ubuntu2204/gpu/archives/*.deb
 
 	cat >> /etc/modprobe.d/blacklist.conf << EOF
 blacklist nouveau
@@ -59,7 +61,7 @@ fi
 #------------ install docker
 if [ ${docker_install} = yes ] || [ ${docker_install} = y ] ; then
 
-	dpkg -i ./ubuntu2004/docker/archives/*.deb
+	dpkg -i ./ubuntu2204/docker/archives/*.deb
 
 	echo -e "\n\n\n------------------------------------------ docker images -----------------------------------------------"
 	docker images
@@ -71,7 +73,7 @@ fi
 #------------- install nvidia docker
 if [ ${nvidia_docker_install} = yes ] || [ ${nvidia_docker_install} = y ] ; then
 
-	dpkg -i ./ubuntu2004/nvidia-container-toolkit/archives/*.deb
+	dpkg -i ./ubuntu2204/nvidia-container-toolkit/archives/*.deb
 	systemctl restart docker
 
 	echo -e "\n\n\n------------------------------------------ docker images -----------------------------------------------"
