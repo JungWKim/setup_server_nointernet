@@ -3,6 +3,7 @@
 #--------- change values of variables to "yes" only
 SAVE_DIR=
 BASIC=no
+GUI=no
 GPU_RELATED=no
 DOCKER=no
 NVIDIA_CONTAINER_TOOLKIT=no
@@ -16,6 +17,8 @@ func_check_variable() {
 		logger -s "[Error] SAVE_DIR is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${BASIC} ] ; then
 		logger -s "[Error] BASIC is not defined." ; ERROR_PRESENCE=1 ; fi
+	if [ -z ${GUI} ] ; then
+		logger -s "[Error] GUI is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${GPU_RELATED} ] ; then
 		logger -s "[Error] GPU_RELATED is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${DOCKER} ] ; then
@@ -72,6 +75,7 @@ func_check_prerequisite() {
 		case "$ANSWER" in
 			[yY][eE][sS] | [yY])
 				mkdir -p ${SAVE_DIR}/basic/archives/partial
+				mkdir -p ${SAVE_DIR}/gui/archives/partial
 				mkdir -p ${SAVE_DIR}/gpu/archives/partial
 				mkdir -p ${SAVE_DIR}/docker/archives/partial
 				mkdir -p ${SAVE_DIR}/nvidia-container-toolkit/archives/partial
@@ -96,6 +100,11 @@ func_check_prerequisite
 if [ ${BASIC} == "yes" ] ; then
 	apt update
 	apt reinstall -y net-tools xfsprogs --download-only -o Dir::Cache="./${SAVE_DIR}/basic"
+fi
+
+#----------- download gui packages
+if [ ${GUI} == "yes" ] ; then
+	apt reinstall -y ubuntu-desktop --download-only -o Dir::Cache="./${SAVE_DIR}/gui"
 fi
 
 #----------- download gpu related packages

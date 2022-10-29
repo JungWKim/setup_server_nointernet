@@ -7,6 +7,7 @@ SAVE_DIR=
 #----------- change from 'no' to '""yes""'
 BASIC_SETUP=no
 DISK_PRESENCE=no
+GUI_SETUP=no
 GPU_PRESENCE=no
 DOCKER_INSTALL=no
 NVIDIA_CONTAINER_TOOLKIT_INSTALL=no
@@ -24,6 +25,8 @@ func_check_variable() {
 		logger -s "[Error] BASIC_SETUP is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${DISK_PRESENCE} ] ; then
 		logger -s "[Error] DISK_PRESENCE is not defined." ; ERROR_PRESENCE=1 ; fi
+	if [ -z ${GUI_SETUP} ] ; then
+		logger -s "[Error] GUI_SETUP is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${GPU_PRESENCE} ] ; then
 		logger -s "[Error] GPU_PRESENCE is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${DOCKER_INSTALL} ] ; then
@@ -50,7 +53,7 @@ func_check_prerequisite () {
 		if [ "${OS_DIST}" == "ubuntu20.04" ] ; then
 			logger -s "[INFO] OS distribution matches ubuntu20.04"
 		else
-			logger -s "[Error] OS distribution doesn't matche ubuntu20.04"
+			logger -s "[Error] OS distribution doesn't match ubuntu20.04"
 			exit 1
 		fi
 	fi
@@ -73,6 +76,9 @@ func_check_prerequisite () {
 		# 2. check subdirectories exist and are directory
 		if [ ! -d ${SAVE_DIR}/basic/archives/partial ] ; then
 			logger -s "[Error] ${SAVE_DIR}/basic/archives/partial doesn't exist."
+			exit 1 ; fi
+		if [ ! -d ${SAVE_DIR}/gui/archives/partial ] ; then
+			logger -s "[Error] ${SAVE_DIR}/gui/archives/partial doesn't exist."
 			exit 1 ; fi
 		if [ ! -d ${SAVE_DIR}/gpu/archives/partial ] ; then
 			logger -s "[Error] ${SAVE_DIR}/gpu/archives/partial doesn't exist."
@@ -113,6 +119,11 @@ if [ ${DISK_PRESENCE} == "yes" ] ; then
 	mkfs.${FS} /dev/sdb1
 	echo "$UUID	${MOUNT_POINT}	${FS}	defaults	0	0" >> /etc/fstab
 	mount -a
+fi
+
+#----------- install gui
+if [ ${GUI_SETUP} == "yes" ] ; then
+	dpkg -i ${SAVE_DIR}/gui/archives/*.deb
 fi
 
 #----------- install nvidia driver / cuda / cudnn

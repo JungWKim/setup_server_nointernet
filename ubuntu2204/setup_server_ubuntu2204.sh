@@ -50,7 +50,7 @@ func_check_prerequisite () {
 		if [ "${OS_DIST}" == "ubuntu22.04" ] ; then
 			logger -s "[INFO] OS distribution matches ubuntu22.04"
 		else
-			logger -s "[Error] OS distribution doesn't matche ubuntu22.04"
+			logger -s "[Error] OS distribution doesn't match ubuntu22.04"
 			exit 1
 		fi
 	fi
