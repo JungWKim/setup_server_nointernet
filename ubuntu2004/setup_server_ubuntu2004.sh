@@ -71,16 +71,16 @@ func_check_prerequisite () {
 		exit 1
 	else
 		# 2. check subdirectories exist and are directory
-		if [ -d ${SAVE_DIR}/basic/archives/partial ] ; then
+		if [ ! -d ${SAVE_DIR}/basic/archives/partial ] ; then
 			logger -s "[Error] ${SAVE_DIR}/basic/archives/partial doesn't exist."
 			exit 1 ; fi
-		if [ -d ${SAVE_DIR}/gpu/archives/partial ] ; then
+		if [ ! -d ${SAVE_DIR}/gpu/archives/partial ] ; then
 			logger -s "[Error] ${SAVE_DIR}/gpu/archives/partial doesn't exist."
 			exit 1 ; fi
-		if [ -d ${SAVE_DIR}/docker/archives/partial ] ; then
+		if [ ! -d ${SAVE_DIR}/docker/archives/partial ] ; then
 			logger -s "[Error] ${SAVE_DIR}/docker/archives/partial doesn't exist."
 			exit 1 ; fi
-		if [ -d ${SAVE_DIR}/nvidia-container-toolkit/archives/partial ] ; then
+		if [ ! -d ${SAVE_DIR}/nvidia-container-toolkit/archives/partial ] ; then
 			logger -s "[Error] ${SAVE_DIR}/nvidia-container-toolkit/archives/partial doesn't exist."
 			exit 1 ; fi
 	fi
