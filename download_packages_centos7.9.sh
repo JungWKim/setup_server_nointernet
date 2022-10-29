@@ -32,6 +32,7 @@ func_check_variable() {
 	fi	
 }
 
+#----------- prerequisite checking function definition
 func_check_prerequisite() {
 
 	# /etc/os-release file existence check
@@ -83,11 +84,15 @@ if [ ${UPDATE} == "yes" ] ; then
 	yum update -y --downloadonly --downloaddir=${SAVE_DIR}/update/
 fi
 
-#----------- download updated packages
+#----------- download gpu related packages
 if [ ${GPU_RELATED} == "yes" ] ; then
 	yum groupinstall -y "Development Tools" --downloadonly --downloaddir=${SAVE_DIR}/gpu/
 	yum install -y kernel-devel --downloadonly --downloaddir=${SAVE_DIR}/gpu/
 	yum install -y dkms --downloadonly --downloaddir=${SAVE_DIR}/gpu/
+	
+	if [ ${UPDATE} != "yes" ] ; then
+		yum update -y --downloadonly --downloaddir=${SAVE_DIR}/update/
+	fi
 fi
 
 #----------- download docker packages
