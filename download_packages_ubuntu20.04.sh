@@ -57,11 +57,35 @@ func_check_prerequisite() {
 		logger -s "[INFO] Network is reachable."
 	fi
 
-	# check that directory for saving packages exists
-	ls ./${SAVE_DIR}
+	# create directories for saving packages
+	ls ${SAVE_DIR}
+	# check whether the directory don't exist
 	if [ $? -ne 0 ] ; then
 		logger -s "[Error] ./${SAVE_DIR} doesn't exist"
 		exit 1
+	else
+		if [ ! -d ${SAVE_DIR} ] ; then
+			logger -s "[Error] ${SAVE_DIR} is not a directory"
+			exit 1
+		fi
+		logger -s "[NOTICE] Starting to create essential subdirectories"
+		read -p "${SAVE_DIR} is gonna be removed and recreated. Are you ok with it?(yes/no)" ANSWER
+		case "$ANSWER" in
+			[yY][eE][sS] | [yY])
+				mkdir -p ${SAVE_DIR}/basic/archives/partial
+				mkdir -p ${SAVE_DIR}/gpu/archives/partial
+				mkdir -p ${SAVE_DIR}/docker/archives/partial
+				mkdir -p ${SAVE_DIR}/nvidia-container-toolkit/archives/partial
+				;;
+			[nN][oO] | [nN])
+				logger -s "[INFO] Exiting Program..."
+				exit 1
+				;;
+			*)
+				logger -s "[Error] Wrong input..."
+				exit 1
+				;;
+		esac
 	fi
 }
 
