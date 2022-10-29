@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#--------- variables
-#--------- change to "yes" only
+#--------- change values of variables to "yes" only
 SAVE_DIR=
 BASIC=no
 GPU_RELATED=no
@@ -58,7 +57,7 @@ func_check_prerequisite() {
 	fi
 
 	# create directories for saving packages
-	ls ${SAVE_DIR}
+	ls ${SAVE_DIR} > /dev/null
 	# check whether the directory don't exist
 	if [ $? -ne 0 ] ; then
 		logger -s "[Error] ./${SAVE_DIR} doesn't exist"
