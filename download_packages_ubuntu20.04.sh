@@ -4,7 +4,6 @@
 #--------- change to "yes" only
 SAVE_DIR=
 BASIC=no
-UPDATE=no
 GPU_RELATED=no
 DOCKER=no
 NVIDIA_CONTAINER_TOOLKIT=no
@@ -18,8 +17,6 @@ func_check_variable() {
 		logger -s "[Error] SAVE_DIR is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${BASIC} ] ; then
 		logger -s "[Error] BASIC is not defined." ; ERROR_PRESENCE=1 ; fi
-	if [ -z ${UPDATE} ] ; then
-		logger -s "[Error] UPDATE is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${GPU_RELATED} ] ; then
 		logger -s "[Error] GPU_RELATED is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${DOCKER} ] ; then
@@ -43,10 +40,10 @@ func_check_prerequisite() {
 		# check OS distribution
 		local OS_DIST=$(. /etc/os-release;echo $ID$VERSION_ID)
 
-		if [ "${OS_DIST}" == "centos7" ] ; then
-			logger -s "OS distribution matches centos7"
+		if [ "${OS_DIST}" == "ubuntu20.04" ] ; then
+			logger -s "OS distribution matches ubuntu20.04"
 		else
-			logger -s "OS distribution doesn't match centos7"
+			logger -s "OS distribution doesn't match ubuntu20.04"
 			exit 1
 		fi
 	fi
@@ -74,39 +71,33 @@ func_check_prerequisite
 
 #----------- download basic packages
 if [ ${BASIC} == "yes" ] ; then
-	yum install -y epel-release --downloadonly --downloaddir=${SAVE_DIR}/gpu/
-	yum install -y epel-release
-	yum install -y net-tools createrepo pciutils --downloadonly --downloaddir=${SAVE_DIR}/basic/
-fi
-
-#----------- download updated packages
-if [ ${UPDATE} == "yes" ] ; then
-	yum update -y --downloadonly --downloaddir=${SAVE_DIR}/update/
+	apt update
+	apt reinstall -y net-tools xfsprogs --download-only -o Dir::Cache="${SAVE_DIR}/basic"
 fi
 
 #----------- download gpu related packages
 if [ ${GPU_RELATED} == "yes" ] ; then
-	yum groupinstall -y "Development Tools" --downloadonly --downloaddir=${SAVE_DIR}/gpu/
-	yum install -y kernel-devel --downloadonly --downloaddir=${SAVE_DIR}/gpu/
-	yum install -y dkms --downloadonly --downloaddir=${SAVE_DIR}/gpu/
-	
-	if [ ${UPDATE} != "yes" ] ; then
-		yum update -y --downloadonly --downloaddir=${SAVE_DIR}/update/
-	fi
+	apt reinstall -y build-essential linux-headers-generic dkms --download-only -o Dir::Cache="${SAVE_DIR}/gpu"
 fi
 
 #----------- download docker packages
 if [ ${DOCKER} == "yes" ] ; then
-	yum install -y yum-utils --downloadonly --downloaddir=${SAVE_DIR}/docker/
-	yum install -y yum-utils
-	yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-	yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin --downloadonly --downloaddir=${SAVE_DIR}/docker/
+	apt reinstall -y ca-certificates curl gnupg lsb-release --download-only -o Dir::Cache="${SAVE_DIR}/docker"
+	apt install -y ca-certificates curl gnupg lsb-release
+	mkdir -p /etc/apt/keyrings
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	echo \
+	  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+	  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	apt update
+	apt reinstall -y docker-ce docker-ce-cli containerd.io docker-compose-plugin --download-only -o Dir::Cache="${SAVE_DIR}/docker"
 fi
 
 #----------- download nvidia-container-toolkit packages
 if [ ${NVIDIA_CONTAINER_TOOLKIT} == "yes" ] ; then
 	distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-	curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo
-	yum clean expire-cache
-	yum install -y nvidia-container-toolkit --downloadonly --downloaddir=${SAVE_DIR}/nvidia-container-toolkit/
+	curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+	curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+	apt update
+	apt reinstall -y nvidia-container-toolkit --download-only -o Dir::Cache="${SAVE_DIR}/nvidia-container-toolkit"
 fi
