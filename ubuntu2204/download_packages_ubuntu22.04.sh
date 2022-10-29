@@ -104,7 +104,7 @@ fi
 
 #----------- download gui packages
 if [ ${GUI} == "yes" ] ; then
-	apt reinstall -y s-generic dkms --download-only -o Dir::Cache="./${SAVE_DIR}/gui"
+	apt reinstall -y ubuntu-desktop --download-only -o Dir::Cache="./${SAVE_DIR}/gui"
 fi
 
 #----------- download gpu related packages
