@@ -117,7 +117,6 @@ fi
 #----------- install nvidia driver / cuda / cudnn
 if [ ${GPU_PRESENCE} == "yes" ] ; then
 
-	cd ${USER_HOME}
 	dpkg -i ${SAVE_DIR}/gpu/archives/*.deb
 
 	# disable nouveau embedded display driver
