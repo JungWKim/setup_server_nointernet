@@ -105,6 +105,7 @@ fi
 #----------- download gui packages
 if [ ${GUI} == "yes" ] ; then
 	apt reinstall -y s-generic dkms --download-only -o Dir::Cache="./${SAVE_DIR}/gui"
+fi
 
 #----------- download gpu related packages
 if [ ${GPU_RELATED} == "yes" ] ; then
