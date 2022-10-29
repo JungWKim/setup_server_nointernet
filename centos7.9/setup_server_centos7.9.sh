@@ -103,8 +103,6 @@ func_check_prerequisite
 #----------- basic setup
 if [ ${BASIC_SETUP} == "yes" ] ; then
 
-	# prevent package auto upgrade
-	sed -i 's/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades
 	# install basic packages
 	yum localinstall -y centos7/basic/*.rpm
 	# install update packages
