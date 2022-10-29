@@ -12,7 +12,7 @@ func_check_variable() {
 
 	local ERROR_PRESENCE=0
 
-	if [ -z ./${SAVE_DIR} ] ; then
+	if [ -z ${SAVE_DIR} ] ; then
 		logger -s "[Error] SAVE_DIR is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${BASIC} ] ; then
 		logger -s "[Error] BASIC is not defined." ; ERROR_PRESENCE=1 ; fi
@@ -39,10 +39,10 @@ func_check_prerequisite() {
 		# check OS distribution
 		local OS_DIST=$(. /etc/os-release;echo $ID$VERSION_ID)
 
-		if [ "${OS_DIST}" == "ubuntu22.04" ] ; then
-			logger -s "[INFO] OS distribution matches ubuntu22.04"
+		if [ "${OS_DIST}" == "ubuntu20.04" ] ; then
+			logger -s "[INFO] OS distribution matches ubuntu20.04"
 		else
-			logger -s "[Error] OS distribution doesn't match ubuntu22.04"
+			logger -s "[Error] OS distribution doesn't match ubuntu20.04"
 			exit 1
 		fi
 	fi
