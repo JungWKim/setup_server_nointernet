@@ -44,9 +44,9 @@ func_check_prerequisite() {
 		local OS_DIST=$(. /etc/os-release;echo $ID$VERSION_ID)
 
 		if [ "${OS_DIST}" == "centos7" ] ; then
-			logger -s "OS distribution matches centos7"
+			logger -s "[INFO] OS distribution matches centos7"
 		else
-			logger -s "OS distribution doesn't match centos7"
+			logger -s "[Error] OS distribution doesn't match centos7"
 			exit 1
 		fi
 	fi
@@ -57,7 +57,7 @@ func_check_prerequisite() {
 		logger -s "[Error] Network is unreachable."
 		exit 1
 	else
-		logger -s "[INFO] Network connection completed"
+		logger -s "[INFO] Network is reachable."
 	fi
 
 	# check that directory for saving packages exists
