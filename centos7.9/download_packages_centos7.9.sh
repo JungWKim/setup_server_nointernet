@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#--------- variables
-#--------- change to "yes" only
+#--------- change variables to "yes" only
 SAVE_DIR=
 BASIC=no
 GPU_RELATED=no
