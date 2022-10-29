@@ -3,6 +3,7 @@
 #--------- change variables to "yes" only
 SAVE_DIR=
 BASIC=no
+GUI=no
 GPU_RELATED=no
 DOCKER=no
 NVIDIA_CONTAINER_TOOLKIT=no
@@ -16,6 +17,8 @@ func_check_variable() {
 		logger -s "[Error] SAVE_DIR is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${BASIC} ] ; then
 		logger -s "[Error] BASIC is not defined." ; ERROR_PRESENCE=1 ; fi
+	if [ -z ${GUI} ] ; then
+		logger -s "[Error] GUI is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${GPU_RELATED} ] ; then
 		logger -s "[Error] GPU_RELATED is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [ -z ${DOCKER} ] ; then
@@ -73,11 +76,16 @@ if [ ${BASIC} == "yes" ] ; then
 	yum install -y epel-release --downloadonly --downloaddir=${SAVE_DIR}/gpu/
 	yum install -y epel-release
 	yum install -y net-tools createrepo pciutils --downloadonly --downloaddir=${SAVE_DIR}/basic/
+	yum update -y --downloadonly --downloaddir=${SAVE_DIR}/update/
+fi
+
+#----------- download GUI packages
+if [ ${GUI} == "yes" ] ; then
+	yum groupinstall -y "GNOME Desktop" --downloadonly --downloaddir=${SAVE_DIR}/gui/
 fi
 
 #----------- download gpu related packages
 if [ ${GPU_RELATED} == "yes" ] ; then
-	yum update -y --downloadonly --downloaddir=${SAVE_DIR}/update/
 	yum groupinstall -y "Development Tools" --downloadonly --downloaddir=${SAVE_DIR}/gpu/
 	yum install -y kernel-devel --downloadonly --downloaddir=${SAVE_DIR}/gpu/
 	yum install -y dkms --downloadonly --downloaddir=${SAVE_DIR}/gpu/

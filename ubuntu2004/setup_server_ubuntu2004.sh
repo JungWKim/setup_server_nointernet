@@ -83,6 +83,7 @@ func_check_prerequisite () {
 		if [ ! -d ${SAVE_DIR}/nvidia-container-toolkit/archives/partial ] ; then
 			logger -s "[Error] ${SAVE_DIR}/nvidia-container-toolkit/archives/partial doesn't exist."
 			exit 1 ; fi
+		logger -s "[INFO] ${SAVE_DIR} exists."
 	fi
 }
 

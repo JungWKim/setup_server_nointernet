@@ -7,6 +7,7 @@ SAVE_DIR=
 #----------- change from 'no' to '""yes""'
 BASIC_SETUP=no
 DISK_PRESENCE=no
+GUI_SETUP=no
 GPU_PRESENCE=no
 DOCKER_INSTALL=no
 NVIDIA_CONTAINER_TOOLKIT_INSTALL=no
@@ -18,10 +19,14 @@ func_check_variable() {
 
 	if [[ -z ${USER_HOME} ]] ; then
 		logger -s "[Error] USER_HOME is not defined." ; ERROR_PRESENCE=1 ; fi
+	if [[ -z ${SAVE_DIR} ]] ; then
+		logger -s "[Error] USER_HOME is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [[ -z ${BASIC_SETUP} ]] ; then
 		logger -s "[Error] BASIC_SETUP is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [[ -z ${DISK_PRESENCE} ]] ; then
 		logger -s "[Error] DISK_PRESENCE is not defined." ; ERROR_PRESENCE=1 ; fi
+	if [[ -z ${GUI_SETUP} ]] ; then
+		logger -s "[Error] GUI_SETUP is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [[ -z ${GPU_PRESENCE} ]] ; then
 		logger -s "[Error] GPU_PRESENCE is not defined." ; ERROR_PRESENCE=1 ; fi
 	if [[ -z ${DOCKER_INSTALL} ]] ; then
@@ -75,6 +80,9 @@ func_check_prerequisite () {
 		if [ ! -d ${SAVE_DIR}/update ] ; then
 			logger -s "[Error] ${SAVE_DIR}/update doesn't exist."
 			exit 1 ; fi
+		if [ ! -d ${SAVE_DIR}/gui ] ; then
+			logger -s "[Error] ${SAVE_DIR}/gui doesn't exist."
+			exit 1 ; fi
 		if [ ! -d ${SAVE_DIR}/gpu ] ; then
 			logger -s "[Error] ${SAVE_DIR}/gpu doesn't exist."
 			exit 1 ; fi
@@ -84,7 +92,7 @@ func_check_prerequisite () {
 		if [ ! -d ${SAVE_DIR}/nvidia-container-toolkit ] ; then
 			logger -s "[Error] ${SAVE_DIR}/nvidia-container-toolkit doesn't exist."
 			exit 1 ; fi
-		logger -s "[INFO] ${SAVE_DIR} exixts."
+		logger -s "[INFO] ${SAVE_DIR} exists."
 	fi
 }
 
@@ -99,6 +107,8 @@ if [ ${BASIC_SETUP} == "yes" ] ; then
 	sed -i 's/1/0/g' /etc/apt/apt.conf.d/20auto-upgrades
 	# install basic packages
 	yum localinstall -y centos7/basic/*.rpm
+	# install update packages
+	yum localinstall -y ${SAVE_DIR}/update/*.rpm
 fi
 
 #----------- formatting & apply FS & mount disks
@@ -116,17 +126,14 @@ if [ ${DISK_PRESENCE} == "yes" ] ; then
 	mount -a
 fi
 
-#----------- update packages
-if [ ${update} = yes ] || [ ${update} = y ] ; then
-
-	yum localinstall -y ${SAVE_DIR}/update/*.rpm
-
+#----------- install GNOME Desktop
+if [ ${GUI_SETUP} == "yes" ] ; then
+	yum localinstall -y ${SAVE_DIR}/gui/*.rpm
 fi
 
 #----------- install nvidia driver / cuda / cudnn
-if [ ${GPU_PRESENCE} = yes ] ; then
+if [ ${GPU_PRESENCE} == "yes" ] ; then
 
-	yum localinstall -y ${SAVE_DIR}/update/*.rpm
 	yum localinstall -y ${SAVE_DIR}/gpu/*.rpm
 
 	# disable nouveau embedded display driver
